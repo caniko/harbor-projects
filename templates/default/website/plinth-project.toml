@@ -1,0 +1,38 @@
+[site]
+title = "My Project"
+description = "Replace with the project's one-line description."
+base_url = "/"
+canonical_domain = "my-project.tartanoglu.com"
+footer_note = "Replace with the project's footer note."
+
+[[nav]]
+label = "Docs"
+href = "/docs/"
+
+[[nav]]
+label = "Source"
+href = "https://github.com/caniko/my-project"
+
+[[footer_links]]
+label = "Source"
+href = "https://github.com/caniko/my-project"
+
+[[footer_links]]
+label = "Documentation"
+href = "/docs/"
+
+[[pages]]
+slug = "index"
+title = "My Project"
+description = "Replace with the project's one-line description."
+
+[[pages.sections]]
+type = "hero"
+title = "My Project"
+tagline = "Replace with the project's tagline."
+subtitle = "Replace with the project's subtitle."
+
+[[pages.sections.ctas]]
+label = "Read docs"
+href = "/docs/"
+primary = true
