@@ -62,8 +62,9 @@ nix flake init -t github:caniko/harbor-projects
   lands at `$out/docs/`. Pass `pkgs` + `appSource` (built web root,
   `index.html` at top) to also embed the app at `$out/<appDir>/`
   (default `app`, so landing CTAs point at `/app`). The bundle must emit
-  subpath-safe URLs — for Dioxus, build it with `DIOXUS_ASSET_ROOT=/<appDir>`
-  so `dx` prefixes assets and the router strips the prefix.
+  subpath-safe URLs — for Dioxus, build it with `Dioxus.toml`
+  `[web.app] base_path = "<appDir>"` so `dx` prefixes asset links and
+  bakes the prefix into the wasm router.
 - `mkWebsiteMarkers { pkgs, website, title, appRoute ?, sections ?, extraGreps ?, name ? }` —
   fails when the built site's `index.html` misses the title, the
   `href="<appRoute>"` funnel link, or the rendered section markers

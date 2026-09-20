@@ -66,8 +66,10 @@
   # the store subdir name (no slashes); the URL path is "/<appDir>".
   # The bundle must generate subpath-safe URLs: root-absolute asset
   # links and routers break under a subdir. For Dioxus, build a second
-  # bundle with DIOXUS_ASSET_ROOT=/<appDir> (dx prefixes assets and the
-  # router strips the prefix); keep the root bundle for direct serving.
+  # bundle with Dioxus.toml `[web.app] base_path = "<appDir>"` (dx
+  # prefixes asset links and bakes the prefix into the wasm router; the
+  # DIOXUS_ASSET_ROOT env alone does not rewrite assets). Keep the root
+  # bundle for direct serving.
   mkSite = {
     projectSiteLib,
     pname,
