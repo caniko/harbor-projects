@@ -14,16 +14,8 @@ label = "Docs"
 href = "/docs/"
 
 [[nav]]
-label = "Platform"
-href = "/app"
-
-[[nav]]
 label = "Source"
 href = "https://github.com/caniko/my-project"
-
-[[footer_links]]
-label = "Platform"
-href = "/app"
 
 [[footer_links]]
 label = "Source"
@@ -45,13 +37,9 @@ tagline = "Replace with the project's tagline."
 subtitle = "Replace with the project's subtitle."
 
 [[pages.sections.ctas]]
-label = "Open platform"
-href = "/app"
-primary = true
-
-[[pages.sections.ctas]]
 label = "Read docs"
 href = "/docs/"
+primary = true
 
 [[pages.sections]]
 type = "feature_grid"
