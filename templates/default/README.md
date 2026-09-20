@@ -1,6 +1,6 @@
 # my-project docs
 
-Scaffolded with `nix flake init -t github:caniko/harbor-docs`.
+Scaffolded with `nix flake init -t github:caniko/harbor-projects`.
 
 Replace `my-project` / `caniko/my-project` / `my-project.tartanoglu.com`
 in `flake.nix`, `nix/*.nix`, `site/flake.nix`, `simit.toml`,

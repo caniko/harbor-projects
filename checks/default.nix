@@ -14,7 +14,7 @@ in {
   docs = harbor.mkDocs {
     inherit pkgs;
     src = templateDocs;
-    pname = "harbor-docs-template-docs";
+    pname = "harbor-projects-template-docs";
   };
 
   summary = harbor.mkSummaryCheck {

@@ -60,6 +60,14 @@
     };
 
   # Plinth site wrapper: merges the built book at /docs/ via docsPackage.
+  # appSource (a store path whose top level is the app's web root,
+  # index.html included) is copied to /<appDir>/ so landing CTAs can
+  # funnel into an embedded app (pink-raven's /app pattern). appDir is
+  # the store subdir name (no slashes); the URL path is "/<appDir>".
+  # The bundle must generate subpath-safe URLs: root-absolute asset
+  # links and routers break under a subdir. For Dioxus, build a second
+  # bundle with DIOXUS_ASSET_ROOT=/<appDir> (dx prefixes assets and the
+  # router strips the prefix); keep the root bundle for direct serving.
   mkSite = {
     projectSiteLib,
     pname,
@@ -68,14 +76,35 @@
     staticPaths ? [],
     docs,
     version ? "0.1.0",
-  }:
-    projectSiteLib.mkProjectSite {
+    pkgs ? null,
+    appSource ? null,
+    appDir ? "app",
+  }: let
+    site = projectSiteLib.mkProjectSite {
       inherit pname version domain configPath staticPaths;
       docsPackage = docs;
     };
+  in
+    if appSource == null
+    then site
+    else if pkgs == null
+    then throw "harbor-projects.mkSite: `pkgs` is required when `appSource` is set"
+    else
+      pkgs.stdenvNoCC.mkDerivation {
+        inherit pname version;
+        dontUnpack = true;
+        phases = ["installPhase"];
+        installPhase = ''
+          mkdir -p $out
+          cp -rL --no-preserve=mode ${site}/. $out/
+          mkdir -p $out/${appDir}
+          cp -rL --no-preserve=mode ${appSource}/. $out/${appDir}/
+          test -s $out/${appDir}/index.html
+        '';
+      };
 
   # Docs dev shell. plinthProject comes from the consumer's plinth input;
-  # harbor-docs deliberately does not pin plinth itself.
+  # harbor-projects deliberately does not pin plinth itself.
   mkDocsDevShell = {
     pkgs,
     plinthProject,

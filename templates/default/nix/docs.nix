@@ -1,9 +1,9 @@
 # Replace `my-project` / `caniko/my-project` throughout after init.
 {
   pkgs,
-  harborDocs,
+  harborProjects,
 }: {
-  docs = harborDocs.mkDocs {
+  docs = harborProjects.mkDocs {
     inherit pkgs;
     src = ../docs;
     pname = "my-project-docs";

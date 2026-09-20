@@ -1,8 +1,8 @@
-# harbor-docs
+# harbor-projects
 
 Reusable mdBook + plinth-project documentation infrastructure for Nix flakes.
 
-`harbor-docs` owns the boring docs plumbing so consuming flakes keep project
+`harbor-projects` owns the boring docs plumbing so consuming flakes keep project
 policy local: book layout, build derivation, plinth `docsPackage` merge,
 dev shell, and doc checks live here; titles, content, and domains stay with
 each consumer.
@@ -11,7 +11,7 @@ each consumer.
 
 ```nix
 {
-  inputs.harbor-docs.url = "github:caniko/harbor-docs";
+  inputs.harbor-projects.url = "github:caniko/harbor-projects";
 }
 ```
 
@@ -20,15 +20,15 @@ each consumer.
 {
   pkgs,
   projectSiteLib,
-  harborDocs,
+  harborProjects,
 }: {
-  docs = harborDocs.mkDocs {
+  docs = harborProjects.mkDocs {
     inherit pkgs;
     src = ../docs;
     pname = "my-project-docs";
   };
 
-  site = harborDocs.mkSite {
+  site = harborProjects.mkSite {
     inherit pkgs projectSiteLib;
     domain = "my-project.tartanoglu.com";
     configPath = ../website/plinth-project.toml;
@@ -46,7 +46,7 @@ each consumer.
 Or scaffold a new docs tree:
 
 ```bash
-nix flake init -t github:caniko/harbor-docs
+nix flake init -t github:caniko/harbor-projects
 ```
 
 ## API
@@ -57,11 +57,19 @@ nix flake init -t github:caniko/harbor-docs
 - `mkDocs { pkgs, src, bookToml ?, pname ?, version ? }` — `mdbook build`
   derivation; `$out` is the built book. Pass `bookToml` (a store path) to
   override the consumer's `docs/book.toml`.
-- `mkSite { projectSiteLib, domain, configPath, staticPaths ?, docs, pname ?, version ? }` —
+- `mkSite { projectSiteLib, domain, configPath, staticPaths ?, docs, pname ?, version ?, pkgs ?, appSource ?, appDir ? }` —
   thin wrapper over `mkProjectSite { docsPackage = docs; }` so the built book
-  lands at `$out/docs/`.
+  lands at `$out/docs/`. Pass `pkgs` + `appSource` (built web root,
+  `index.html` at top) to also embed the app at `$out/<appDir>/`
+  (default `app`, so landing CTAs point at `/app`). The bundle must emit
+  subpath-safe URLs — for Dioxus, build it with `DIOXUS_ASSET_ROOT=/<appDir>`
+  so `dx` prefixes assets and the router strips the prefix.
+- `mkWebsiteMarkers { pkgs, website, title, appRoute ?, sections ?, extraGreps ?, name ? }` —
+  fails when the built site's `index.html` misses the title, the
+  `href="<appRoute>"` funnel link, or the rendered section markers
+  (default `workflow-steps`, `audience-grid`, `trust-panel`).
 - `mkDocsDevShell { pkgs, plinthProject, extraPackages ? }` — `mdbook` +
   `plinth-project` shell (`plinthProject` comes from the consumer's plinth
-  input; harbor-docs does not pin plinth itself).
+  input; harbor-projects does not pin plinth itself).
 - `mkSummaryCheck { pkgs, src }` — fails when a `docs/src/*.md` file is not
   reachable from `SUMMARY.md`.

@@ -22,4 +22,26 @@
       fi
       mkdir -p "$out"
     '';
+
+  # Landing/funnel contract, generalized from pink-raven's websiteMarkers:
+  # the built site must mention its title, link the embedded app URL
+  # path, and contain the given rendered section markers. appRoute is
+  # the href form ("/<appDir>"); extraGreps adds consumer-specific
+  # `grep -q -- '<pattern>' ${website}/...` lines.
+  mkWebsiteMarkers = {
+    pkgs,
+    website,
+    title,
+    appRoute ? "/app",
+    sections ? ["workflow-steps" "audience-grid" "trust-panel"],
+    extraGreps ? [],
+    name ? "website-markers",
+  }:
+    pkgs.runCommand name {} ''
+      grep -q ${pkgs.lib.escapeShellArg title} ${website}/index.html
+      grep -q ${pkgs.lib.escapeShellArg "href=\"${appRoute}\""} ${website}/index.html
+      ${pkgs.lib.concatMapStringsSep "\n" (s: "grep -q ${pkgs.lib.escapeShellArg s} ${website}/index.html") sections}
+      ${pkgs.lib.concatStringsSep "\n" extraGreps}
+      touch $out
+    '';
 }

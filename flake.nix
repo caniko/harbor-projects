@@ -39,7 +39,7 @@
 
       templates.default = {
         path = ./templates/default;
-        description = "mdBook docs + plinth-project site with harbor-docs";
+        description = "mdBook docs + plinth-project site with harbor-projects";
       };
     }
     // flake-utils.lib.eachDefaultSystem (

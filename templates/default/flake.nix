@@ -1,18 +1,18 @@
 {
-  description = "My Project docs — powered by harbor-docs";
+  description = "My Project docs — powered by harbor-projects";
 
   inputs = {
-    harbor-docs.url = "github:caniko/harbor-docs";
+    harbor-projects.url = "github:caniko/harbor-projects";
 
-    nixpkgs.follows = "harbor-docs/nixpkgs";
-    harbor-meta.follows = "harbor-docs/harbor-meta";
-    treefmt-nix.follows = "harbor-docs/treefmt-nix";
+    nixpkgs.follows = "harbor-projects/nixpkgs";
+    harbor-meta.follows = "harbor-projects/harbor-meta";
+    treefmt-nix.follows = "harbor-projects/treefmt-nix";
   };
 
   outputs = {
     self,
     nixpkgs,
-    harbor-docs,
+    harbor-projects,
     harbor-meta,
     treefmt-nix,
     ...
@@ -22,7 +22,7 @@
       pkgs = import nixpkgs {inherit system;};
       packages = import ./nix/docs.nix {
         inherit pkgs;
-        harborDocs = harbor-docs.lib;
+        harborProjects = harbor-projects.lib;
       };
       treefmt = treefmt-nix.lib.evalModule pkgs {
         imports = [harbor-meta.treefmtModules.nix harbor-meta.treefmtModules.toml];
@@ -49,7 +49,7 @@
       env = forSystem system;
     in {
       docs = env.packages.docs;
-      summary = harbor-docs.lib.mkSummaryCheck {
+      summary = harbor-projects.lib.mkSummaryCheck {
         pkgs = env.pkgs;
         src = ./docs;
       };

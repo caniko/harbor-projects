@@ -3,5 +3,5 @@
   checks = import ./checks.nix {};
 
   inherit (docs) mkBookToml mkDocs mkSite mkDocsDevShell;
-  inherit (checks) mkSummaryCheck;
+  inherit (checks) mkSummaryCheck mkWebsiteMarkers;
 }
