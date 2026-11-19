@@ -51,10 +51,7 @@
           then nixpkgs-darwin
           else nixpkgs
         ) {inherit system;};
-        treefmt = treefmt-nix.lib.evalModule pkgs {
-          imports = [harbor-meta.treefmtModules.nix harbor-meta.treefmtModules.toml];
-          projectRootFile = "flake.nix";
-        };
+        treefmt = treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix {inherit harbor-meta;});
       in {
         formatter = treefmt.config.build.wrapper;
 
@@ -65,11 +62,12 @@
           '';
         };
 
-        checks = import ./checks {
-          inherit self pkgs treefmt-nix;
-          harbor = lib;
-          harborMeta = harbor-meta;
-        };
+        checks =
+          import ./checks {
+            inherit pkgs;
+            harbor = lib;
+          }
+          // {formatting = treefmt.config.build.check self;};
       }
     );
 }
